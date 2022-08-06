@@ -1,5 +1,5 @@
 const fs = require('fs');
-const path = require("path");
+const path = require('path');
 const Manager = require('./lib/Manager');
 const Engineer = require('./lib/Engineer');
 const Intern = require('./lib/Intern');
@@ -23,8 +23,8 @@ function getEmployeeType(){
 }
 
 const checkNoMoreQuestions = (employeeType) => {
-    if(employeeType === "I dont want to add anymore team members"){
-        return buildTeam();
+    if(employeeType.employeeType === "I dont want to add anymore team members"){
+        return buildTeam(teamArray);
     }
     return generalEmployeeQuestions(employeeType);
 }
@@ -59,9 +59,7 @@ function engineerQuestions(generalQuestions, employeeType){
         message: 'Enter employee github name:'
     }).then((github)=>{
         const engineer = new Engineer(generalQuestions.employeeName, generalQuestions.email, generalQuestions.id, github.github)
-
         teamArray.push(engineer);
-        console.log("teamArray with new engineer", teamArray);
         getEmployeeType();
     });
 }
@@ -72,10 +70,8 @@ function internQuestions(generalQuestions, employeeType){
         name: 'school',
         message: 'Enter employee school:'
     }).then((school) => {
-        const intern = new Intern(generalQuestions.employeeName, generalQuestions.email, generalQuestions.id, school.school)
-
+        const intern = new Intern(generalQuestions.employeeName, generalQuestions.email, generalQuestions.id, school.school);
         teamArray.push(intern);
-        console.log("teamArray with new intern", teamArray);
         getEmployeeType();
     });
 }
@@ -86,42 +82,38 @@ function managerQuestions(generalQuestions, employeeType){
     name: 'phone',
     message: 'Enter employee phone number:'
     }).then((phone) => {
-        const manager = new Manager(generalQuestions.employeeName, generalQuestions.email, generalQuestions.id, phone.phone)
-
+        const manager = new Manager(generalQuestions.employeeName, generalQuestions.email, generalQuestions.id, phone.phone);
         teamArray.push(manager);
-        console.log("teamArray with new manager", teamArray);
-        getEmployeeType()
+        getEmployeeType();
     });
 }
 
 const getSpecifiedQuestion = (generalQuestions, employeeType) => {
     console.log("EmployeeType: ", employeeType, "\nGeneralQuestions: ", generalQuestions);
-    switch (employeeType) {
+    switch (employeeType.employeeType) {
         case "Engineer":
             console.log("EmployeeType: ", employeeType, "\nGeneralQuestions: ", generalQuestions);
-            console.log('broken or nah?');
             engineerQuestions(generalQuestions, employeeType);
             break;
         case "Intern":
-            console.log("EmployeeType: ", employeeType);
+            console.log("EmployeeType: ", employeeType, "\nGeneralQuestions: ", generalQuestions);
             internQuestions(generalQuestions, employeeType);
             break;
         case "Manager":
-            console.log("EmployeeType: ", employeeType);
+            console.log("EmployeeType: ", employeeType, "\nGeneralQuestions: ", generalQuestions);
             managerQuestions(generalQuestions, employeeType);
-            break;
-        default:
-            console.log("EmployeeType: ", employeeType);
-            buildTeam();
             break;
     }
 }
 
-function buildTeam(){
+function buildTeam(teamArray){
     if(!fs.existsSync(DIST_DIRECTORY)){
-        fs.mkdirSync(DIST_DIRECTORY)
+        console.log("in if");
+        fs.mkdirSync(DIST_DIRECTORY);
+        console.log("dir made");
     }
-    fs.writeFileSync(distPath, sendToTemplate(teamArray), "utf-8");
+    console.log("out of if", teamArray);
+    fs.writeFileSync(distPath, sendToTemplate(teamArray), "utf-8"); // This line not working
 }
 
 module.exports = teamArray;
