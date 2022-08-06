@@ -106,14 +106,11 @@ const getSpecifiedQuestion = (generalQuestions, employeeType) => {
     }
 }
 
-function buildTeam(teamArray){
+const buildTeam = (teamArray) => {
     if(!fs.existsSync(DIST_DIRECTORY)){
-        console.log("in if");
         fs.mkdirSync(DIST_DIRECTORY);
-        console.log("dir made");
     }
-    console.log("out of if", teamArray);
-    fs.writeFileSync(distPath, sendToTemplate(teamArray), "utf-8"); // This line not working
+    fs.writeFileSync(distPath, sendToTemplate(teamArray), "utf-8");
 }
 
 module.exports = teamArray;
