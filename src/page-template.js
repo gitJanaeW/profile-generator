@@ -2,7 +2,7 @@ const generateTeam = teamArray => {
 }
 
 module.exports = teamArray => {
-    console.log(teamArray);
+    console.log(teamArray[0].getName());
     return `
     <!DOCTYPE html>
     <html lang="en">
