@@ -52,7 +52,6 @@ const generalEmployeeQuestions = (employeeType) => {
 
 
 function engineerQuestions(generalQuestions, employeeType){
-    console.log("IN ENGINEER QUESTIONS");
     inquirer.prompt({
         type: 'input',
         name: 'github',
@@ -89,18 +88,14 @@ function managerQuestions(generalQuestions, employeeType){
 }
 
 const getSpecifiedQuestion = (generalQuestions, employeeType) => {
-    console.log("EmployeeType: ", employeeType, "\nGeneralQuestions: ", generalQuestions);
     switch (employeeType.employeeType) {
         case "Engineer":
-            console.log("EmployeeType: ", employeeType, "\nGeneralQuestions: ", generalQuestions);
             engineerQuestions(generalQuestions, employeeType);
             break;
         case "Intern":
-            console.log("EmployeeType: ", employeeType, "\nGeneralQuestions: ", generalQuestions);
             internQuestions(generalQuestions, employeeType);
             break;
         case "Manager":
-            console.log("EmployeeType: ", employeeType, "\nGeneralQuestions: ", generalQuestions);
             managerQuestions(generalQuestions, employeeType);
             break;
     }
