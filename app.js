@@ -12,16 +12,25 @@ const distPath = path.join(DIST_DIRECTORY, "team.html");
 const sendToTemplate = require("./src/page-template");
 
 getEmployeeType();
+function getEmployeeType(){
+    inquirer.prompt(
+    {
+        type: 'list',
+        name: 'employeeType',
+        message: '\n============\nNEW EMPLOYEE\n============\nWhat type of employee you inputting?',
+        choices: ['Engineer', 'Intern', 'Manager', "I dont want to add anymore team members"]
+    }).then((employeeType) => checkNoMoreQuestions(employeeType));
+}
 
-    function getEmployeeType(){
-        inquirer.prompt([
-        {
-            type: 'list',
-            name: 'employeeType',
-            message: '\n============\nNEW EMPLOYEE\n============\nWhat type of employee you inputting?',
-            choices: ['Engineer', 'Intern', 'Manager', "I dont want to add anymore team members"]
-        
-        },
+const checkNoMoreQuestions = (employeeType) => {
+    if(employeeType === "I dont want to add anymore team members"){
+        return buildTeam();
+    }
+    return generalEmployeeQuestions(employeeType);
+}
+
+const generalEmployeeQuestions = (employeeType) => {
+    inquirer.prompt([
         {
             type: 'input',
             name: 'employeeName',
@@ -37,23 +46,75 @@ getEmployeeType();
             name: 'email',
             message: 'Enter employee email:'
         }
-    ]).then((answers)=>{
-        const empType = answers.employeeType
+    ])
+    .then((generalQuestions) => {getSpecifiedQuestion(generalQuestions, employeeType)}); 
+}
 
-        switch(empType){
-            case "Engineer":
-                engineerQuestions(answers)
-                break;
-            case "Intern":
-                 internQuestions(answers)
-                break;
-            case "Manager":
-                 managerQuestions(answers)
-                break;
-                default:
-                    buildTeam()
-        }
+
+function engineerQuestions(generalQuestions, employeeType){
+    console.log("IN ENGINEER QUESTIONS");
+    inquirer.prompt({
+        type: 'input',
+        name: 'github',
+        message: 'Enter employee github name:'
+    }).then((github)=>{
+        const engineer = new Engineer(generalQuestions.employeeName, generalQuestions.email, generalQuestions.id, github.github)
+
+        teamArray.push(engineer);
+        console.log("teamArray with new engineer", teamArray);
+        getEmployeeType();
     });
+}
+            
+function internQuestions(generalQuestions, employeeType){ 
+    inquirer.prompt({
+        type: 'input',
+        name: 'school',
+        message: 'Enter employee school:'
+    }).then((school) => {
+        const intern = new Intern(generalQuestions.employeeName, generalQuestions.email, generalQuestions.id, school.school)
+
+        teamArray.push(intern);
+        console.log("teamArray with new intern", teamArray);
+        getEmployeeType();
+    });
+}
+    
+function managerQuestions(generalQuestions, employeeType){
+    inquirer.prompt({
+    type: 'input',
+    name: 'phone',
+    message: 'Enter employee phone number:'
+    }).then((phone) => {
+        const manager = new Manager(generalQuestions.employeeName, generalQuestions.email, generalQuestions.id, phone.phone)
+
+        teamArray.push(manager);
+        console.log("teamArray with new manager", teamArray);
+        getEmployeeType()
+    });
+}
+
+const getSpecifiedQuestion = (generalQuestions, employeeType) => {
+    console.log("EmployeeType: ", employeeType, "\nGeneralQuestions: ", generalQuestions);
+    switch (employeeType) {
+        case "Engineer":
+            console.log("EmployeeType: ", employeeType, "\nGeneralQuestions: ", generalQuestions);
+            console.log('broken or nah?');
+            engineerQuestions(generalQuestions, employeeType);
+            break;
+        case "Intern":
+            console.log("EmployeeType: ", employeeType);
+            internQuestions(generalQuestions, employeeType);
+            break;
+        case "Manager":
+            console.log("EmployeeType: ", employeeType);
+            managerQuestions(generalQuestions, employeeType);
+            break;
+        default:
+            console.log("EmployeeType: ", employeeType);
+            buildTeam();
+            break;
+    }
 }
 
 function buildTeam(){
@@ -63,47 +124,4 @@ function buildTeam(){
     fs.writeFileSync(distPath, sendToTemplate(teamArray), "utf-8");
 }
 
-
-        function engineerQuestions(answers){
-            inquirer.prompt({
-                type: 'input',
-                name: 'github',
-                message: 'Enter employee github name:'
-            }).then((github)=>{
-                const engineer = new Engineer(answers.employeeName, answers.email, answers.id, github.github)
-
-                teamArray.push(engineer)
-                console.log("teamArray with new engineer", teamArray)
-                getEmployeeType();
-            });
-        }
-            
-function internQuestions(answers){ 
-    inquirer.prompt({
-        type: 'input',
-        name: 'school',
-        message: 'Enter employee school:'
-    }).then((school) => {
-        const intern = new Engineer(answers.employeeName, answers.email, answers.id, school.school)
-
-        teamArray.push(intern)
-        console.log("teamArray with new intern", teamArray)
-        getEmployeeType();
-    });
-}
-    
-    function managerQuestions(answers){
-        inquirer.prompt({
-        type: 'input',
-        name: 'phone',
-        message: 'Enter employee phone number:'
-    }).then((phone) => {
-        const manager = new Engineer(answers.employeeName, answers.email, answers.id, phone.phone)
-
-        teamArray.push(manager)
-        console.log("teamArray with new manager", teamArray)
-        getEmployeeType()
-    });
-    }
-
-    module.exports = teamArray;
+module.exports = teamArray;
