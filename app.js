@@ -9,7 +9,7 @@ const teamArray = [];
 
 const DIST_DIRECTORY = path.resolve(__dirname, "dist");
 const distPath = path.join(DIST_DIRECTORY, "team.html");
-const sendToTemplate = require("./src/page-template");
+const sendTemplate = require("./src/page-template");
 
 getEmployeeType();
 function getEmployeeType(){
@@ -59,6 +59,7 @@ function engineerQuestions(generalQuestions, employeeType){
     }).then((github)=>{
         const engineer = new Engineer(generalQuestions.employeeName, generalQuestions.email, generalQuestions.id, github.github)
         teamArray.push(engineer);
+        console.log("teamArray ENGINQUESTIONS: ", teamArray);
         getEmployeeType();
     });
 }
@@ -101,11 +102,14 @@ const getSpecifiedQuestion = (generalQuestions, employeeType) => {
     }
 }
 
-const buildTeam = (teamArray) => {
+const buildTeam = async (teamArray) => {
     if(!fs.existsSync(DIST_DIRECTORY)){
         fs.mkdirSync(DIST_DIRECTORY);
     }
-    fs.writeFileSync(distPath, sendToTemplate(teamArray), "utf-8");
+    const html = await sendTemplate(teamArray);
+    console.log(teamArray);
+    console.log("111", html);
+    fs.writeFileSync(distPath, html, "utf-8");
 }
 
 module.exports = teamArray;

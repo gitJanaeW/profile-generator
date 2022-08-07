@@ -1,6 +1,5 @@
-const generateTeam = teamArray => { 
-    console.log("TEAMARRAY LOOK HERE: ", teamArray);
-    const teamHtml = `
+const generateTemplate = teamArray => { 
+    let teamHtml = `
     <!DOCTYPE html>
     <html lang="en">
     <head>
@@ -17,7 +16,7 @@ const generateTeam = teamArray => {
         <main class="d-flex justify-content-around flex-wrap">`;
 
     for(var i = 0; i < teamArray.length; i++){
-        if(teamArray[i].getJob() === "Engineer"){
+        if(teamArray[i].getJob() === "Engineer") {
             teamHtml += `
             <section class="mx-2 p-4 card col-3 my-4 ">
                 <div class="card-header bg-info text-dark p-3">
@@ -32,6 +31,7 @@ const generateTeam = teamArray => {
             </section>
             `;
         } else if(teamArray[i].getJob() === "Intern") {
+            console.log("SHOULD SEE SOMETHING HERE");
             teamHtml += `
             <section class="mx-2 p-4 card col-3 my-4 ">
                 <div class="card-header bg-info text-dark p-3">
@@ -60,23 +60,15 @@ const generateTeam = teamArray => {
             </section>
             `;
         }
+        teamHtml += `
+        </main>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-A3rJD856KowSb7dwlZdYEkO39Gagi7vIsF0jrRAoQmDKKtQBHUuLZ9AsSv4jD4Xa" crossorigin="anonymous"></script>
+        </body>
+        </html>
+        `;
         return teamHtml;
     };
-
-    teamHtml += `
-    </main>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-A3rJD856KowSb7dwlZdYEkO39Gagi7vIsF0jrRAoQmDKKtQBHUuLZ9AsSv4jD4Xa" crossorigin="anonymous"></script>
-    </body>
-    </html>
-    `;
-    checkingHTML(teamHtml);
     return teamHtml;
 }
 
-const checkingHTML = (teamHtml) => {
-    console.log(teamHtml);
-}
-
-module.exports = teamHtml => {
-    return `${teamHtml}`;
-};
+module.exports = generateTemplate;
